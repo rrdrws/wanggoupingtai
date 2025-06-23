@@ -1,8 +1,8 @@
 <template>
-  <div class="product-list view-container">
+  <div class="product-list-view view-container-global"> <!-- Updated class & use global container -->
     <h1>Products</h1>
 
-    <div class="filters">
+    <div class="filters-panel"> <!-- Updated class -->
       <input type="text" v-model="searchName" placeholder="Search by name..." @keyup.enter="applyFilters" />
       <input type="text" v-model="searchCategory" placeholder="Filter by category..." @keyup.enter="applyFilters" />
       <button @click="applyFilters" class="btn btn-secondary">Search/Filter</button>
@@ -13,14 +13,20 @@
     <div v.if="error" class="error-message">{{ error }}</div>
     <div v.if="!loading && !error" class="products-grid">
       <div v-for="product in products" :key="product.id" class="product-card">
-        <img :src="product.imageUrl || defaultImage" :alt="product.name" class="product-image">
-        <h2>{{ product.name }}</h2>
-        <p class="product-price">${{ product.price }}</p>
-        <p class="product-description">{{ product.description }}</p>
-        <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="btn">
-          View Details
+        <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-image-link">
+          <img :src="product.imageUrl || defaultImage" :alt="product.name" class="product-image">
         </router-link>
-        <button @click="addToCart(product)" class="btn btn-primary">Add to Cart</button>
+        <div class="product-info">
+          <h2 class="product-name">{{ product.name }}</h2>
+          <p class="product-description">{{ product.description }}</p>
+          <p class="product-price">${{ product.price ? product.price.toFixed(2) : '0.00' }}</p>
+        </div>
+        <div class="product-actions">
+          <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="btn btn-secondary">
+            View Details
+          </router-link>
+          <button @click="addToCart(product)" class="btn btn-primary">Add to Cart</button>
+        </div>
       </div>
     </div>
     <p v.if="!loading && !error && products.length === 0" class="no-products">No products found matching your criteria.</p>
@@ -92,105 +98,152 @@ export default {
 </script>
 
 <style scoped>
-.view-container {
-  padding: 20px;
+.product-list-view { /* Changed class name for clarity */
+  /* Uses .view-container-global from App.vue for max-width and padding */
 }
-.filters {
-  margin-bottom: 20px;
+
+.filters-panel { /* Renamed for clarity */
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   display: flex;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
-  flex-wrap: wrap; /* Allow filters to wrap on smaller screens */
+  flex-wrap: wrap;
 }
-.filters input[type="text"] {
-  padding: 8px;
+
+.filters-panel input[type="text"] {
+  padding: 10px; /* Slightly larger padding */
   border: 1px solid #ccc;
   border-radius: 4px;
-  min-width: 150px; /* Minimum width for inputs */
+  min-width: 200px; /* Increased min-width */
+  font-size: 0.95em;
 }
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  border-color: #6c757d;
+
+/* Using global .btn styles, specific overrides if needed */
+.filters-panel .btn {
+  padding: 10px 18px; /* Consistent padding with inputs */
 }
-.btn-secondary:hover {
-  background-color: #5a6268;
-}
-.btn-outline {
-  background-color: transparent;
-  color: #007bff;
-  border: 1px solid #007bff;
-}
-.btn-outline:hover {
-  background-color: #007bff;
-  color: white;
-}
-.loading, .error-message {
+
+.loading, .error-message, .no-products { /* .no-products was added in template */
   text-align: center;
-  padding: 20px;
+  padding: 25px;
+  font-size: 1.1em;
 }
 .error-message {
-  color: red;
+  color: #d9534f; /* Bootstrap danger color */
 }
+.no-products {
+  color: #666;
+}
+
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); /* Slightly adjusted minmax */
+  gap: 25px; /* Increased gap */
 }
+
 .product-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden; /* Ensures child elements like image don't overflow radius */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  display: flex;
+  flex-direction: column; /* Important for button placement */
 }
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+
+.product-image-link { /* Wrapper for image to make it clickable */
+  display: block;
+}
+
 .product-image {
-  max-width: 100%;
-  height: 150px;
-  object-fit: cover;
-  margin-bottom: 10px;
-  border-radius: 4px;
+  width: 100%;
+  height: 220px; /* Increased height for better visuals */
+  object-fit: cover; /* 'cover' is usually better than 'contain' for cards */
+  /* border-bottom: 1px solid #f0f0f0; Remove if not desired */
 }
-.product-price {
-  font-weight: bold;
+
+.product-info {
+  padding: 15px;
+  text-align: left; /* Align text to left for typical card layout */
+  flex-grow: 1; /* Allows info to take space, pushing actions down */
+}
+
+.product-name {
+  font-size: 1.1em; /* Slightly larger name */
+  font-weight: 600; /* Bolder name */
   color: #333;
-  margin: 10px 0;
+  margin: 0 0 8px 0;
+  /* Truncate long names - good for consistency */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 .product-description {
-  font-size: 0.9em;
-  color: #666;
-  min-height: 60px; /* Adjust as needed */
+  font-size: 0.85em; /* Smaller description */
+  color: #555;
+  margin-bottom: 12px;
+  min-height: 50px; /* Approx 3 lines */
+  line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 3; /* Limit to 3 lines */
   -webkit-box-orient: vertical;
 }
-.btn {
-  display: inline-block;
-  padding: 8px 15px;
-  margin-top: 10px;
-  text-decoration: none;
-  border-radius: 4px;
-  cursor: pointer;
+
+.product-price {
+  font-size: 1.25em; /* Larger price */
+  font-weight: bold;
+  color: #d9534f; /* Prominent price color, e.g., Taobao red */
+  margin-bottom: 15px;
+}
+
+.product-actions {
+  padding: 0 15px 15px 15px; /* Padding for buttons */
+  display: flex;
+  gap: 10px; /* Space between buttons if multiple */
+  margin-top: auto; /* Pushes actions to the bottom of the card */
+}
+
+.product-actions .btn {
+  flex-grow: 1; /* Make buttons take equal width if needed */
+  padding: 10px; /* Ensure consistent button padding */
   font-size: 0.9em;
-  border: 1px solid transparent;
 }
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-  margin-left: 5px;
-}
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-.router-link-active { /* Style for router-link as button */
-  background-color: #6c757d;
-  color: white;
-}
-.router-link-active:hover {
-  background-color: #5a6268;
+/* No need for .router-link-active styling here as it's handled by global .btn style */
+
+@media (max-width: 576px) {
+  .filters-panel {
+    flex-direction: column;
+    align-items: stretch; /* Make input and buttons full width */
+  }
+  .filters-panel input[type="text"], .filters-panel .btn {
+    min-width: unset;
+    width: 100%;
+  }
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Smaller cards on mobile */
+    gap: 15px;
+  }
+  .product-image {
+    height: 180px;
+  }
+  .product-name {
+    font-size: 1em;
+  }
+  .product-price {
+    font-size: 1.15em;
+  }
 }
 </style>
