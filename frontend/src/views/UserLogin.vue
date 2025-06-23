@@ -1,25 +1,25 @@
 <template>
   <div class="user-login-view view-container-global">
     <div class="login-panel">
-      <h1>Login to Your Account</h1>
+      <h1>登录您的账户</h1>
       <form @submit.prevent="handleLogin" class="login-form">
         <div class="form-group">
-          <label for="username">Username or Email</label>
-          <input type="text" id="username" v.model="credentials.username" required placeholder="Enter your username or email" />
+          <label for="username">用户名或邮箱</label>
+          <input type="text" id="username" v.model="credentials.username" required placeholder="请输入用户名或邮箱" />
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" v.model="credentials.password" required placeholder="Enter your password" />
+          <label for="password">密码</label>
+          <input type="password" id="password" v.model="credentials.password" required placeholder="请输入密码" />
         </div>
         <button type="submit" :disabled="loading" class="btn btn-primary btn-login">
-          {{ loading ? 'Logging in...' : 'Login' }}
+          {{ loading ? '登录中...' : '登录' }}
         </button>
       </form>
-      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-      <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p> <!-- Error messages translated in script -->
+      <p v-if="successMessage" class="success-message">{{ successMessage }}</p> <!-- Success messages translated in script -->
       <div class="additional-links">
-        <router-link to="/register">Don't have an account? Register here</router-link>
-        <!-- <router-link to="/forgot-password">Forgot password?</router-link> -->
+        <router-link to="/register">还没有账户？立即注册</router-link>
+        <!-- <router-link to="/forgot-password">忘记密码？</router-link> -->
       </div>
     </div>
   </div>
@@ -64,10 +64,10 @@ export default {
         } else {
           // Should not happen if login is successful and backend sends ID
           localStorage.removeItem('userId');
-          console.warn("User ID not received from backend on login.");
+          localStorage.warn("登录时未从后端收到用户ID。"); // User ID not received from backend on login.
         }
 
-        this.successMessage = `Login successful! Welcome ${username}.`;
+        this.successMessage = `登录成功！欢迎您，${username}。`; // Login successful! Welcome ${username}.
 
         // TODO: Update global state (e.g., using Pinia/Vuex) to reflect login status
         // Example: this.$store.dispatch('auth/login', { user: { id, username }, token: message });
@@ -83,14 +83,14 @@ export default {
         console.error('Error logging in:', err);
         if (err.response) {
           if (err.response.status === 401) {
-            this.errorMessage = 'Invalid username or password.';
+            this.errorMessage = '用户名或密码无效。'; // Invalid username or password.
           } else if (err.response.data && typeof err.response.data === 'string') {
-            this.errorMessage = err.response.data;
+            this.errorMessage = err.response.data; // Use backend message if available and it's a simple string
           } else {
-            this.errorMessage = 'Login failed. Please try again.';
+            this.errorMessage = '登录失败，请重试。'; // Login failed. Please try again.
           }
         } else {
-          this.errorMessage = 'Login failed. An unexpected error occurred or server is unavailable.';
+          this.errorMessage = '登录失败。发生意外错误或服务器不可用。'; // Login failed. An unexpected error occurred or server is unavailable.
         }
       } finally {
         this.loading = false;

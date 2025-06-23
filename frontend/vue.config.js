@@ -1,6 +1,12 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
+  pages: {
+    index: {
+      entry: 'src/main.js',
+      title: 'MyShop',
+    }
+  },
   devServer: {
     port: 8081, // Ensures frontend runs on a different port than backend
     proxy: {

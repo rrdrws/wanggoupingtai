@@ -3,33 +3,31 @@
     <div class="container">
       <div class="logo-area">
         <router-link to="/" class="logo">
-          <!-- Placeholder for Logo -->
-          <img src="@/assets/logo.png" alt="Site Logo" class="logo-img">
-          <span>MyShop</span>
+          <span>我的商店</span>
         </router-link>
       </div>
 
       <div class="search-area">
-        <input type="search" v.model="searchQuery" placeholder="Search products..." @keyup.enter="performSearch">
-        <button @click="performSearch" class="search-button">Search</button>
+        <input type="search" v.model="searchQuery" placeholder="搜索商品..." @keyup.enter="performSearch">
+        <button @click="performSearch" class="search-button">搜索</button>
       </div>
 
       <nav class="navigation-area">
-        <router-link to="/">Home</router-link>
-        <router-link to="/products">All Products</router-link>
-        <!-- <router-link to="/categories">Categories</router-link> Placeholder -->
-        <router-link to="/publish-product">Publish Product</router-link> <!-- Link for new page -->
+        <router-link to="/">首页</router-link>
+        <router-link to="/products">所有商品</router-link>
+        <!-- <router-link to="/categories">分类</router-link> Placeholder -->
+        <router-link to="/publish-product">发布商品</router-link>
         <router-link to="/cart" class="cart-link">
-          Cart
+          购物车
           <span v-if="cartStore.itemCount > 0" class="cart-count">({{ cartStore.itemCount }})</span>
         </router-link>
 
         <div v-if="isLoggedIn" class="user-actions">
-          <span>Welcome, {{ username }}!</span>
-          <button @click="logout" class="logout-button">Logout</button>
-          <!-- <router-link to="/profile">My Profile</router-link> -->
+          <span>欢迎, {{ username }}!</span>
+          <button @click="logout" class="logout-button">退出登录</button>
+          <!-- <router-link to="/profile">我的个人中心</router-link> -->
         </div>
-        <router-link v-else to="/login">Login/Register</router-link>
+        <router-link v-else to="/login">登录/注册</router-link>
       </nav>
     </div>
   </header>

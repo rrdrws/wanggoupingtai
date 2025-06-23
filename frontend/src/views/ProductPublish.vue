@@ -1,41 +1,41 @@
 <template>
   <div class="product-publish-view view-container-global">
     <div class="publish-panel">
-      <h1>Publish New Product</h1>
+      <h1>发布新商品</h1>
       <form @submit.prevent="handlePublishProduct" class="publish-form">
         <div class="form-group">
-          <label for="name">Product Name</label>
-          <input type="text" id="name" v.model="product.name" required placeholder="Enter product name" />
+          <label for="name">商品名称</label>
+          <input type="text" id="name" v.model="product.name" required placeholder="请输入商品名称" />
         </div>
         <div class="form-group">
-          <label for="description">Description</label>
-          <textarea id="description" v.model="product.description" rows="4" required placeholder="Enter product description"></textarea>
+          <label for="description">商品描述</label>
+          <textarea id="description" v.model="product.description" rows="4" required placeholder="请输入商品描述"></textarea>
         </div>
         <div class="form-row">
           <div class="form-group half-width">
-            <label for="price">Price ($)</label>
-            <input type="number" id="price" v.model.number="product.price" step="0.01" min="0" required placeholder="e.g., 19.99" />
+            <label for="price">价格 (¥)</label> <!-- Changed currency symbol -->
+            <input type="number" id="price" v.model.number="product.price" step="0.01" min="0" required placeholder="例如：19.99" />
           </div>
           <div class="form-group half-width">
-            <label for="stockQuantity">Stock Quantity</label>
-            <input type="number" id="stockQuantity" v.model.number="product.stockQuantity" min="0" required placeholder="e.g., 100" />
+            <label for="stockQuantity">库存数量</label>
+            <input type="number" id="stockQuantity" v.model.number="product.stockQuantity" min="0" required placeholder="例如：100" />
           </div>
         </div>
         <div class="form-group">
-          <label for="category">Category</label>
-          <input type="text" id="category" v.model="product.category" required placeholder="e.g., Electronics, Books" />
+          <label for="category">商品分类</label>
+          <input type="text" id="category" v.model="product.category" required placeholder="例如：电子产品、图书" />
         </div>
         <div class="form-group">
-          <label for="imageUrl">Image URL</label>
+          <label for="imageUrl">图片链接</label>
           <input type="url" id="imageUrl" v.model="product.imageUrl" placeholder="https://example.com/image.jpg" />
         </div>
 
         <button type="submit" :disabled="loading" class="btn btn-primary btn-publish">
-          {{ loading ? 'Publishing...' : 'Publish Product' }}
+          {{ loading ? '发布中...' : '发布商品' }}
         </button>
       </form>
-      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-      <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p> <!-- Error messages translated in script -->
+      <p v-if="successMessage" class="success-message">{{ successMessage }}</p> <!-- Success messages translated in script -->
     </div>
   </div>
 </template>
@@ -69,18 +69,18 @@ export default {
       try {
         // Basic validation for price and stock
         if (product.value.price === null || product.value.price < 0) {
-          errorMessage.value = "Price must be a non-negative number.";
+          errorMessage.value = "价格必须是非负数。"; // Price must be a non-negative number.
           loading.value = false;
           return;
         }
         if (product.value.stockQuantity === null || product.value.stockQuantity < 0) {
-          errorMessage.value = "Stock quantity must be a non-negative number.";
+          errorMessage.value = "库存数量必须是非负数。"; // Stock quantity must be a non-negative number.
           loading.value = false;
           return;
         }
 
         const response = await ApiService.createProduct(product.value);
-        successMessage.value = `Product "${response.data.name}" published successfully! Product ID: ${response.data.id}`;
+        successMessage.value = `商品 "${response.data.name}" 发布成功！商品ID: ${response.data.id}`; // Product "${response.data.name}" published successfully! Product ID: ${response.data.id}
         // Clear form
         product.value = { name: '', description: '', price: null, category: '', imageUrl: '', stockQuantity: null };
         // Optionally redirect to product page or product list
@@ -94,9 +94,9 @@ export default {
       } catch (err) {
         console.error('Error publishing product:', err);
         if (err.response && err.response.data) {
-          errorMessage.value = `Failed to publish product: ${err.response.data.message || 'Server error'}`;
+          errorMessage.value = `发布商品失败: ${err.response.data.message || '服务器错误'}`; // Failed to publish product: ${err.response.data.message || 'Server error'}
         } else {
-          errorMessage.value = 'Failed to publish product. An unexpected error occurred.';
+          errorMessage.value = '发布商品失败，发生意外错误。'; // Failed to publish product. An unexpected error occurred.
         }
       } finally {
         loading.value = false;

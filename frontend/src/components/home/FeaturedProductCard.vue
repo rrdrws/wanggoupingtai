@@ -4,10 +4,10 @@
       <img :src="product.imageUrl || defaultImage" :alt="product.name" class="product-image">
       <div class="product-info">
         <h3 class="product-name">{{ product.name }}</h3>
-        <p class="product-price">${{ product.price.toFixed(2) }}</p>
+        <p class="product-price">¥{{ product.price.toFixed(2) }}</p>
       </div>
     </router-link>
-    <button @click="addToCart" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
+    <button @click="addToCart" class="btn btn-primary add-to-cart-btn">加入购物车</button>
   </div>
 </template>
 
@@ -24,11 +24,11 @@ export default {
   },
   setup(props) {
     const cartStore = useCartStore();
-    const defaultImage = 'https://via.placeholder.com/200x200?text=No+Image';
+    const defaultImage = 'https://via.placeholder.com/200x200?text=No+Image'; // Or a Chinese placeholder: ?text=暂无图片
 
     const addToCart = () => {
       cartStore.addItem(props.product);
-      alert(`${props.product.name} added to cart!`); // Simple feedback
+      alert(`${props.product.name} 已加入购物车！`); // Simple feedback
     };
 
     return {

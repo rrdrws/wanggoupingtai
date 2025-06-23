@@ -1,35 +1,35 @@
 <template>
   <div class="product-list-view view-container-global"> <!-- Updated class & use global container -->
-    <h1>Products</h1>
+    <h1>商品列表</h1>
 
     <div class="filters-panel"> <!-- Updated class -->
-      <input type="text" v-model="searchName" placeholder="Search by name..." @keyup.enter="applyFilters" />
-      <input type="text" v-model="searchCategory" placeholder="Filter by category..." @keyup.enter="applyFilters" />
-      <button @click="applyFilters" class="btn btn-secondary">Search/Filter</button>
-      <button @click="clearFilters" class="btn btn-outline">Clear</button>
+      <input type="text" v-model="searchName" placeholder="按名称搜索..." @keyup.enter="applyFilters" />
+      <input type="text" v-model="searchCategory" placeholder="按分类筛选..." @keyup.enter="applyFilters" />
+      <button @click="applyFilters" class="btn btn-secondary">搜索/筛选</button>
+      <button @click="clearFilters" class="btn btn-outline">清除</button>
     </div>
 
-    <div v.if="loading" class="loading">Loading products...</div>
-    <div v.if="error" class="error-message">{{ error }}</div>
+    <div v.if="loading" class="loading">商品加载中...</div>
+    <div v.if="error" class="error-message">{{ error }}</div> <!-- Error message will be translated when set -->
     <div v.if="!loading && !error" class="products-grid">
       <div v-for="product in products" :key="product.id" class="product-card">
-        <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-image-link">
+        <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-link-wrapper">
           <img :src="product.imageUrl || defaultImage" :alt="product.name" class="product-image">
+          <div class="product-info">
+            <h3 class="product-name">{{ product.name }}</h3> <!-- Changed to h3 -->
+            <p class="product-description">{{ product.description }}</p>
+            <p class="product-price">¥{{ product.price ? product.price.toFixed(2) : '0.00' }}</p> <!-- Changed currency symbol -->
+          </div>
         </router-link>
-        <div class="product-info">
-          <h2 class="product-name">{{ product.name }}</h2>
-          <p class="product-description">{{ product.description }}</p>
-          <p class="product-price">${{ product.price ? product.price.toFixed(2) : '0.00' }}</p>
-        </div>
         <div class="product-actions">
           <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="btn btn-secondary">
-            View Details
+            查看详情
           </router-link>
-          <button @click="addToCart(product)" class="btn btn-primary">Add to Cart</button>
+          <button @click="addToCart(product)" class="btn btn-primary">加入购物车</button>
         </div>
       </div>
     </div>
-    <p v.if="!loading && !error && products.length === 0" class="no-products">No products found matching your criteria.</p>
+    <p v.if="!loading && !error && products.length === 0" class="no-products">未找到符合条件的商品。</p>
   </div>
 </template>
 
@@ -65,9 +65,9 @@ export default {
         this.products = response.data;
       } catch (err) {
         console.error('Error fetching products:', err);
-        this.error = 'Failed to load products. Please try again later.';
+        this.error = '加载商品失败，请稍后再试。';
         if (err.response) {
-          this.error += ` (Status: ${err.response.status})`;
+          this.error += ` (状态: ${err.response.status})`;
         }
       } finally {
         this.loading = false;
@@ -90,7 +90,7 @@ export default {
     },
     addToCart(product) {
       this.cartStore.addItem(product);
-      alert(`${product.name} added to cart!`);
+      alert(`${product.name} 已加入购物车！`);
       // Optionally, provide more sophisticated user feedback (e.g., a toast notification)
     }
   }
@@ -161,8 +161,10 @@ export default {
   box-shadow: 0 5px 15px rgba(0,0,0,0.12);
 }
 
-.product-image-link { /* Wrapper for image to make it clickable */
-  display: block;
+.product-link-wrapper { /* Updated class for the main clickable area */
+  text-decoration: none;
+  color: inherit;
+  display: block; /* Or flex if content inside needs flex control */
 }
 
 .product-image {

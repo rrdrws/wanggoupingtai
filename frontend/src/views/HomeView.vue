@@ -3,25 +3,25 @@
 
     <!-- Optional: Hero Section / Main Banner -->
     <section class="hero-section">
-      <h1>Welcome to MyShop</h1>
-      <p>Your one-stop shop for everything you need!</p>
+      <h1>欢迎来到 我的商店</h1>
+      <p>您的一站式购物天堂！</p>
       <!-- The main search is in TheHeader, but you can add another prominent one here if desired -->
       <!-- <div class="home-search-bar">
-        <input type="search" placeholder="I'm shopping for...">
-        <button class="btn btn-primary">Search</button>
+        <input type="search" placeholder="我正在寻找...">
+        <button class="btn btn-primary">搜索</button>
       </div> -->
     </section>
 
     <div class="home-layout">
       <aside class="sidebar">
-        <CategoryNavigation />
+        <CategoryNavigation /> <!-- CategoryNavigation will be translated in its own step -->
       </aside>
 
       <main class="main-content-home">
         <section class="featured-products">
-          <h2>Featured Products</h2>
-          <div v-if="loading" class="loading">Loading featured products...</div>
-          <div v-if="error" class="error-message">{{ error }}</div>
+          <h2>推荐商品</h2>
+          <div v-if="loading" class="loading">推荐商品加载中...</div>
+          <div v-if="error" class="error-message">{{ error }}</div> <!-- Error message will be translated when set -->
           <div v-if="!loading && !error" class="products-grid">
             <FeaturedProductCard
               v-for="product in featuredProducts"
@@ -30,7 +30,7 @@
             />
           </div>
           <p v-if="!loading && !error && featuredProducts.length === 0" class="no-products">
-            No featured products available at the moment.
+            暂时没有推荐商品。
           </p>
         </section>
 
@@ -78,6 +78,7 @@ export default {
       } catch (err) {
         console.error('Error fetching featured products:', err);
         error.value = 'Failed to load featured products.';
++        error.value = '加载推荐商品失败。';
       } finally {
         loading.value = false;
       }

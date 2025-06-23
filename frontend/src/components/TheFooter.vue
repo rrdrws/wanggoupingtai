@@ -2,10 +2,10 @@
   <footer class="site-footer">
     <div class="container">
       <div class="footer-links">
-        <router-link to="/about">About Us</router-link>
-        <a href="#">Contact Us (Placeholder)</a>
-        <a href="#">Terms & Conditions (Placeholder)</a>
-        <a href="#">Privacy Policy (Placeholder)</a>
+        <router-link to="/about">关于我们</router-link>
+        <a href="#">联系我们 (占位符)</a>
+        <a href="#">服务条款 (占位符)</a>
+        <a href="#">隐私政策 (占位符)</a>
       </div>
       <div class="footer-social">
         <!-- Placeholder for social media icons -->
@@ -14,8 +14,8 @@
         <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
       </div>
       <div class="copyright">
-        &copy; {{ new Date().getFullYear() }} MyShop. All rights reserved.
-        <p>Inspired by e-commerce platforms like Taobao for learning purposes.</p>
+        &copy; {{ new Date().getFullYear() }} 我的商店. 版权所有.
+        <p>本网站设计灵感来源于淘宝等电商平台，仅用于学习目的。</p>
       </div>
     </div>
   </footer>
