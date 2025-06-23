@@ -39,7 +39,10 @@ export default {
   getProductById(productId) {
     return apiClient.get(`/products/${productId}`);
   },
-  // Add other product-related methods (create, update, delete - typically admin)
+  createProduct(productData) {
+    return apiClient.post('/products', productData);
+  },
+  // Add other product-related methods (update, delete - typically admin)
 
   // Order services
   createOrder(orderData) {

@@ -1,17 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from './views/HomeView.vue' // Changed from HelloWorld to a view
+import HomeView from './views/HomeView.vue'
 import ProductList from './views/ProductList.vue'
 import ProductDetail from './views/ProductDetail.vue'
-import UserLogin from './views/UserLogin.vue'
+import UserLoginView from './views/UserLogin.vue' // Corrected import name assuming file is UserLogin.vue but component name is UserLoginView
 import UserRegistration from './views/UserRegistration.vue'
 import ShoppingCart from './views/ShoppingCart.vue'
-// import UserProfile from './views/UserProfile.vue' // Example for a user-specific page
+import ProductPublishView from './views/ProductPublish.vue'
+// import UserProfile from './views/UserProfile.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: HomeView // Default component, can be ProductList or a dedicated Home page
+    component: HomeView
   },
   {
     path: '/products',
@@ -19,7 +20,7 @@ const routes = [
     component: ProductList
   },
   {
-    path: '/product/:id', // Changed path to be more RESTful (singular 'product')
+    path: '/product/:id',
     name: 'ProductDetail',
     component: ProductDetail,
     props: true
@@ -27,7 +28,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: UserLogin
+    component: UserLoginView // Use corrected name
   },
   {
     path: '/register',
@@ -38,6 +39,12 @@ const routes = [
     path: '/cart',
     name: 'Cart',
     component: ShoppingCart
+  },
+  {
+    path: '/publish-product', // New route for publishing products
+    name: 'ProductPublish',
+    component: ProductPublishView
+    // meta: { requiresAuth: true, roles: ['ADMIN', 'SELLER'] } // Example for future auth guard
   },
   // {
   //   path: '/profile',

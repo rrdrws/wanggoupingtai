@@ -1,9 +1,9 @@
 <template>
   <div class="shopping-cart view-container">
-    <h1>Shopping Cart</h1>
+    <h1>购物车</h1>
     <div v-if="cartStore.itemCount === 0" class="empty-cart">
-      <p>Your shopping cart is empty.</p>
-      <router-link to="/products" class="btn btn-primary">Continue Shopping</router-link>
+      <p>您的购物车是空的。</p>
+      <router-link to="/products" class="btn btn-primary">继续购物</router-link>
     </div>
     <div v-else>
       <div class="cart-items">
@@ -12,11 +12,11 @@
             <img :src="item.product.imageUrl || defaultImage" :alt="item.product.name" class="item-image">
             <div>
               <h3>{{ item.product.name }}</h3>
-              <p>Price: ${{ item.product.price }}</p>
+              <p>价格: ¥{{ item.product.price }}</p> <!-- Changed currency -->
             </div>
           </div>
           <div class="item-controls">
-            <label :for="'quantity-' + item.product.id">Quantity:</label>
+            <label :for="'quantity-' + item.product.id">数量:</label>
             <input
               type="number"
               :id="'quantity-' + item.product.id"
@@ -25,15 +25,15 @@
               min="1"
               class="quantity-input"
             >
-            <p>Subtotal: ${{ (item.product.price * item.quantity).toFixed(2) }}</p>
-            <button @click="removeFromCart(item.product.id)" class="btn btn-danger">Remove</button>
+            <p>小计: ¥{{ (item.product.price * item.quantity).toFixed(2) }}</p> <!-- Changed currency -->
+            <button @click="removeFromCart(item.product.id)" class="btn btn-danger">移除</button>
           </div>
         </div>
       </div>
       <div class="cart-summary">
-        <h2>Total: ${{ cartStore.totalPrice }}</h2>
-        <button @click="checkout" class="btn btn-success btn-checkout">Proceed to Checkout</button>
-        <button @click="clearCart" class="btn btn-warning">Clear Cart</button>
+        <h2>总计: ¥{{ cartStore.totalPrice }}</h2> <!-- Changed currency -->
+        <button @click="checkout" class="btn btn-success btn-checkout">去结算</button>
+        <button @click="clearCart" class="btn btn-warning">清空购物车</button>
       </div>
     </div>
   </div>
@@ -67,14 +67,14 @@ export default {
     };
 
     const clearCart = () => {
-      if(confirm('Are you sure you want to clear the entire cart?')) {
+      if(confirm('您确定要清空整个购物车吗？')) {
         cartStore.clearCart();
       }
     };
 
     const checkout = async () => {
       if (cartStore.itemCount === 0) {
-        alert('Your cart is empty. Add some products before checking out.');
+        alert('您的购物车是空的。请先添加商品再结算。');
         return;
       }
 
@@ -83,7 +83,7 @@ export default {
       const userId = localStorage.getItem('userId'); // Assume userId is stored on login
 
       if (!loggedInUser || !userId) {
-        alert('Please login to proceed with checkout.');
+        alert('请先登录再进行结算。');
         // Optionally redirect to login page: this.$router.push('/login');
         // For setup context, router needs to be accessed differently if not using `this`.
         // import { useRouter } from 'vue-router'; const router = useRouter(); router.push('/login');
@@ -91,9 +91,9 @@ export default {
       }
 
       // Simulate gathering shipping/billing - in real app, this would be a form
-      const shippingAddress = prompt("Enter your shipping address:", "123 Main St, Anytown, USA");
+      const shippingAddress = prompt("请输入您的收货地址:", "例如：XX省XX市XX区XX街道XX号");
       if (!shippingAddress) {
-        alert("Shipping address is required.");
+        alert("收货地址是必填项。");
         return;
       }
 
@@ -106,13 +106,13 @@ export default {
         // The backend Order model currently doesn't have OrderItems, so this is simplified.
       };
 
-      alert(`Proceeding to checkout for ${loggedInUser} with ${cartStore.itemCount} items, total: $${cartStore.totalPrice}. Shipping to: ${shippingAddress}`);
+      alert(`用户 ${loggedInUser} 正在结算 ${cartStore.itemCount} 件商品，总计: ¥${cartStore.totalPrice}。收货地址: ${shippingAddress}`);
 
       try {
         // Assuming ApiService.createOrder exists and works with the simplified OrderRequest DTO
         // The backend OrderController expects OrderRequest: { userId, totalAmount, shippingAddress, billingAddress }
         const response = await ApiService.createOrder(orderData);
-        alert(`Order placed successfully! Order ID: ${response.data.id}. You will be redirected shortly.`);
+        alert(`订单提交成功！订单号: ${response.data.id}。稍后将为您跳转。`);
         cartStore.clearCart();
         // Redirect to an order confirmation page or home
         // Example: router.push({ name: 'OrderConfirmation', params: { orderId: response.data.id } });
@@ -125,7 +125,7 @@ export default {
 
       } catch (error) {
         console.error("Error placing order:", error);
-        alert("There was an error placing your order. Please try again. " + (error.response?.data?.message || error.message));
+        alert("提交订单时发生错误，请重试。" + (error.response?.data?.message || error.message));
       }
     };
 
